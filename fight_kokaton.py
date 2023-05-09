@@ -8,6 +8,7 @@ import pygame as pg
 WIDTH = 1600  # ゲームウィンドウの幅
 HEIGHT = 900  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5  # 爆弾の数
+NUM_OF_COUNT = 0  # 撃ち落とした爆弾の数
 
 
 def check_bound(area: pg.Rect, obj: pg.Rect) -> tuple[bool, bool]:
@@ -142,17 +143,21 @@ class Beam:
         """
         self._rct.move_ip(self._vx, self._vy)
         screen.blit(self._img, self._rct)
-        
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     clock = pg.time.Clock()
     bg_img = pg.image.load("ex03/fig/pg_bg.jpg")
-
     bird = Bird(3, (900, 400))
     bombs = [Bomb() for _ in range(NUM_OF_BOMBS)]
     beam = None
+    NUM_OF_COUNT = 0
+    
+    fonto = pg.font.Font(None, 80)  # 撃ち落とした爆弾の数の表示
+    txt = fonto.render("撃ち落とした爆弾の数: \n NUM_COUNT",True, (255, 255, 255))
+
 
     tmr = 0
     while True:
@@ -164,6 +169,7 @@ def main():
                  
         tmr += 1
         screen.blit(bg_img, [0, 0])
+        screen.blit(txt, [80, 50])
 
 
         for bomb in bombs:
@@ -185,6 +191,7 @@ def main():
                     beam = None
                     del bombs[i]
                     bird.change_img(6, screen)
+                    NUM_OF_COUNT += 1
                     break
 
         pg.display.update()
